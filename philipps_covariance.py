@@ -32,7 +32,7 @@ Gammat = expminusiHt * Gamma0Trealspace * expiHt
 
 % % With pairing term, one has to be a bit more careful.
 
-% starting Hamiltonian
+% starting Hamiltonian (BCS Theory and chemical potential)
 
 % H = sum_{i, j} Jij c_i ^ + c_j
 % + 1 / 2 sum_{i, j} Kij(c_i ^ + c_j ^ + c_i c_j)      Kij = Jij i < j, -Jij i > j
@@ -47,12 +47,12 @@ B=-J * (Jij - Jij.conjugate().T) %has to be adjusted if pairing term different s
 % % singular value decomposition to find eigenstates of H0:
 
 [PhiDag0, Lambda0, PsiTDag0] = svd(A0-B0)
-% PhiDag * Lambda * PsiTDag'=A-B
+% PhiDag * Lambda * PsiTDag.conjugate().T=A-B
 
 E0modes = diag(A0 - Lambda0)
 
 E0gs = trace(A0 - Lambda0) / 2
-%Dag0?
+
     Phi = PhiDag.conjugate().T
 
     Psi = PsiT.conjugate().T
