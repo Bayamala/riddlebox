@@ -7,16 +7,15 @@
 import numpy
 import scipy
 
+%%V and D are inputs:
 [V, D] = eig(H0)
 
-%% Compute correlation functions at temperature T
-%Wieso schaut Covariance Matrix so aus?
-
-Gamma0Tdiag = 1. / (1 + exp(beta * diag(D)))
+%% Compute correlation functions at temperature T:
+    
+Gamma0Tdiag = 1. / (exp(beta * diag(D))+1) %here change sign for bosons
 Gamma0Tdiag = diag(Gamma0Tdiag)
 
 %% This gives the correlations in the diagonalized space(i.e., contains only occupations), so I rotate back into real space:
-%wieso ist Rotation in realraum nur produkt mit V und V^T?
 
 Gamma0Trealspace = V * Gamma0Tdiag * V.conjugate().T
 
@@ -37,10 +36,10 @@ Gammat = expminusiHt * Gamma0Trealspace * expiHt
 % starting Hamiltonian (BCS Theory and chemical potential)
 
 % H = sum_{i, j} Jij c_i ^ + c_j
-% + 1 / 2 sum_{i, j} Kij(c_i ^ + c_j ^ + c_i c_j)      Kij = Jij i < j, -Jij i > j
+% + 1 / 2 sum_{i, j} Kij(c_i ^ + c_j ^ + + c_i c_j)      Kij = Jij i < j, -Jij i > j
 % +mu sum_i c_i ^ + c_i
 
-% What is J?
+% What is J? J could be 1 for example 
 A = -J * (Jij + Jij.conjugate().T) + mu*eye(N)
 
 B=-J * (Jij - Jij.conjugate().T) %has to be adjusted if pairing term different strength than hopping, see van Hemmens paper for definition of A and B
@@ -48,7 +47,6 @@ B=-J * (Jij - Jij.conjugate().T) %has to be adjusted if pairing term different s
 % % the following should achieve the same as the diagonalization using van Hemmens code
 
 % % singular value decomposition to find eigenstates of H0:
-% % Why is it A0-B0?
 
 [PhiDag0, Lambda0, PsiTDag0] = svd(A0-B0)
 % PhiDag * Lambda * PsiTDag.conjugate().T=A-B
@@ -67,7 +65,6 @@ E0gs = trace(A0 - Lambda0) / 2
 
     h = (Phi - Psi) / 2
 
-%how to understand this?
     T = kron([[1, 0],[0, 0]], g)+kron([[0, 0],[0, 1]], g)+kron([[0, 1],[0, 0]], h)+kron([[0, 0],[1, 0]], h)
 
 % % % % % I just realize I did not finish this part where I extract the covariance matrix from g and h, but a thermal state should look like:
