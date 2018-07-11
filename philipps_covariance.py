@@ -5,6 +5,7 @@
 %% Diagonalize Hamiltonian Matrix
 
 import numpy
+from scipy.linalg import expm, sinm, cosm
 import scipy
 
 [V, D] = eig(H0)
@@ -53,9 +54,9 @@ B=-J * (Jij - Jij.conjugate().T) %has to be adjusted if pairing term different s
 [PhiDag0, Lambda0, PsiTDag0] = np.svd(A0-B0)
 % PhiDag * Lambda * PsiTDag.conjugate().T=A-B
 
-E0modes = diag(A0 - Lambda0)
+E0modes = np.diag(A0 - Lambda0)
 
-E0gs = trace(A0 - Lambda0) / 2
+E0gs = np.trace(A0 - Lambda0) / 2
 
     Phi = PhiDag.conjugate().T
 
@@ -68,7 +69,7 @@ E0gs = trace(A0 - Lambda0) / 2
     h = (Phi - Psi) / 2
 
 %how to understand this?
-    T = kron([[1, 0],[0, 0]], g)+kron([[0, 0],[0, 1]], g)+kron([[0, 1],[0, 0]], h)+kron([[0, 0],[1, 0]], h)
+    T = np.kron([[1, 0],[0, 0]], g)+np.kron([[0, 0],[0, 1]], g)+np.kron([[0, 1],[0, 0]], h)+np.kron([[0, 0],[1, 0]], h)
 
 % % % % % I just realize I did not finish this part where I extract the covariance matrix from g and h, but a thermal state should look like:
 
@@ -82,7 +83,7 @@ E0gs = trace(A0 - Lambda0) / 2
 
 Uteohelp = expm(1j * deltat * Lambda)
 
-Uteo = kron([[1, 0],[0, 0]], Uteohelp)+kron([[0, 0],[0, 1]], Uteohelp.conjugate().T)
+Uteo = np.kron([[1, 0],[0, 0]], Uteohelp)+np.kron([[0, 0],[0, 1]], Uteohelp.conjugate().T)
 
 % % % time evolution two times Gammat?
 

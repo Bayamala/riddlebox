@@ -1,4 +1,6 @@
 import numpy as np
+import scipy
+from scipy.linalg import expm, sinm, cosm
 H=np.array([[2, 0], [0, 2]])
 
 [w,x0]=np.linalg.eig(H)
