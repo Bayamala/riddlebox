@@ -6,18 +6,17 @@
 
 import numpy
 import scipy
-from scipy import expm, sinm, cosm
 
 [V, D] = eig(H0)
 
-##Compute correlation functions at temperature T
-#Wieso schaut Covariance Matrix so aus?
+%% Compute correlation functions at temperature T
+%Wieso schaut Covariance Matrix so aus?
 
 Gamma0Tdiag = 1. / (1 + exp(beta * diag(D)))
 Gamma0Tdiag = diag(Gamma0Tdiag)
 
-##This gives the correlations in the diagonalized space(i.e., contains only occupations), so I rotate back into real space:
-#wieso ist Rotation in realraum nur produkt mit V und V^T?
+%% This gives the correlations in the diagonalized space(i.e., contains only occupations), so I rotate back into real space:
+%wieso ist Rotation in realraum nur produkt mit V und V^T?
 
 Gamma0Trealspace = V * Gamma0Tdiag * V.conjugate().T
 
@@ -33,30 +32,30 @@ expminusiHt = expiHt.conjugate().T
 
 Gammat = expminusiHt * Gamma0Trealspace * expiHt
 
-## With pairing term, one has to be a bit more careful.
+% % With pairing term, one has to be a bit more careful.
 
-#starting Hamiltonian (BCS Theory and chemical potential)
+% starting Hamiltonian (BCS Theory and chemical potential)
 
 % H = sum_{i, j} Jij c_i ^ + c_j
 % + 1 / 2 sum_{i, j} Kij(c_i ^ + c_j ^ + c_i c_j)      Kij = Jij i < j, -Jij i > j
 % +mu sum_i c_i ^ + c_i
 
-# What is J? -> general coupling strength, i.e. 1
+% What is J?
 A = -J * (Jij + Jij.conjugate().T) + mu*eye(N)
 
 B=-J * (Jij - Jij.conjugate().T) %has to be adjusted if pairing term different strength than hopping, see van Hemmens paper for definition of A and B
 
-##the following should achieve the same as the diagonalization using van Hemmens code
+% % the following should achieve the same as the diagonalization using van Hemmens code
 
-# singular value decomposition to find eigenstates of H0:
-# Why is it A0-B0?
+% % singular value decomposition to find eigenstates of H0:
+% % Why is it A0-B0?
 
-[PhiDag0, Lambda0, PsiTDag0] = np.linalg.svd(A0-B0)
+[PhiDag0, Lambda0, PsiTDag0] = svd(A0-B0)
 % PhiDag * Lambda * PsiTDag.conjugate().T=A-B
 
-E0modes = np.diag(A0 - Lambda0)
+E0modes = diag(A0 - Lambda0)
 
-E0gs = np.trace(A0 - Lambda0) / 2
+E0gs = trace(A0 - Lambda0) / 2
 
     Phi = PhiDag.conjugate().T
 
@@ -69,11 +68,11 @@ E0gs = np.trace(A0 - Lambda0) / 2
     h = (Phi - Psi) / 2
 
 %how to understand this?
-    T = np.kron([[1, 0],[0, 0]], g)+np.kron([[0, 0],[0, 1]], g)+np.kron([[0, 1],[0, 0]], h)+np.kron([[0, 0],[1, 0]], h)
+    T = kron([[1, 0],[0, 0]], g)+kron([[0, 0],[0, 1]], g)+kron([[0, 1],[0, 0]], h)+kron([[0, 0],[1, 0]], h)
 
 % % % % % I just realize I did not finish this part where I extract the covariance matrix from g and h, but a thermal state should look like:
 
-    eigenmodeoccupation = np.diag(1. / (np.exp(np.diag(Lambda) / temperature) + 1))
+    eigenmodeoccupation = diag(1. / (exp(diag(Lambda) / temperature) + 1))
     Gammathermal = T.conjugate().T*(kron([[1,0],[0,0]],eye(chainlength,chainlength)-eigenmodeoccupation)+kron([[0,0],[0,1]],eigenmodeoccupation))*T
     %how does this formular come about?
 
@@ -83,7 +82,7 @@ E0gs = np.trace(A0 - Lambda0) / 2
 
 Uteohelp = expm(1j * deltat * Lambda)
 
-Uteo = np.kron([[1, 0],[0, 0]], Uteohelp)+np.kron([[0, 0],[0, 1]], Uteohelp.conjugate().T)
+Uteo = kron([[1, 0],[0, 0]], Uteohelp)+kron([[0, 0],[0, 1]], Uteohelp.conjugate().T)
 
 % % % time evolution two times Gammat?
 
