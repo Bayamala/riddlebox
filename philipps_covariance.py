@@ -50,7 +50,7 @@ B=-J * (Jij - Jij.conjugate().T) %has to be adjusted if pairing term different s
 % % singular value decomposition to find eigenstates of H0:
 % % Why is it A0-B0?
 
-[PhiDag0, Lambda0, PsiTDag0] = svd(A0-B0)
+[PhiDag0, Lambda0, PsiTDag0] = np.svd(A0-B0)
 % PhiDag * Lambda * PsiTDag.conjugate().T=A-B
 
 E0modes = diag(A0 - Lambda0)
